@@ -16,12 +16,14 @@ const Input = styled('input')({
 const upload_style = {
   width: '50%',
   marginLeft: '10px',
-  marginRight: '10px'
+  marginRight: '10px',
+  textTransform: 'none',
+  fontSize: '18px',
 };
 
 export default function UploadButton({ name, id }) {
   const [encodedFile, setEncodedFile] = useState(0);
-  const [fileName, setFileName] = useState('UPLOAD');
+  const [fileName, setFileName] = useState('Upload');
 
   const onChange = e => {
     setFileName(e.target.files[0].name);
@@ -67,6 +69,7 @@ export default function UploadButton({ name, id }) {
         </Button>  
       </label>
       <input type="hidden" name={name} value={encodedFile} />
+      <img src={encodedFile} alt="사진" width="100%" />
     </>
   );
 }
