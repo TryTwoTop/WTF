@@ -1,0 +1,14 @@
+#rightScreen {
+  width: 70%;
+  float: right;
+
+  padding: 15px;
+  box-sizing: border-box;
+
+  border: 2px solid yellow;
+}
+
+#rightScreen h5 {
+  font-size: 20px;
+  margin-top: 10px;
+}
