@@ -9,6 +9,8 @@ import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 // 사용하기
 // https://mui.com/components/popover/#popupstate-helper
 
+// 아래 hover 코드는 밑의 링크를 참조하였음.
+// https://mui.com/components/buttons/#customization
 const HelpButton = styled(IconButton)({
   '&:hover': {
     backgroundColor: '#0069d9',

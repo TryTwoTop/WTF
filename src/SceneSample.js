@@ -1,6 +1,8 @@
-import React, { Component } from 'react'
-import { PLYLoader } from 'three/examples/jsm/loaders/PLYLoader'
-import * as THREE from 'three'
+import React, { Component } from 'react';
+import { PLYLoader } from 'three/examples/jsm/loaders/PLYLoader';
+import * as THREE from 'three';
+
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import dol from './ply/dolphins_be.ply';
 import dol2 from './ply/dolphins_le.ply';
@@ -8,13 +10,11 @@ import lucky from './ply/Lucy100k.ply';
 import jjs from './ply/jjs.ply';
 import jjsTest from './ply/jjsTest.ply';
 
-
 // 추가 - 마우스 콘트롤
 // 문제시 바로 삭제
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+
 
 function addShadowedLight( x, y, z, color, intensity, scene) {
-
   const directionalLight = new THREE.DirectionalLight( color, intensity );
   directionalLight.position.set( x, y, z );
   scene.add( directionalLight );
@@ -42,18 +42,18 @@ class SceneSample extends Component {
   constructor(props) {
     super(props)
 
-    this.start = this.start.bind(this)
-    this.stop = this.stop.bind(this)
-    this.animate = this.animate.bind(this)
+    this.start = this.start.bind(this);
+    this.stop = this.stop.bind(this);
+    this.animate = this.animate.bind(this);
   }
 
   componentDidMount() {
     let camera, cameraTarget, scene, renderer;
-    const width = this.mount.clientWidth
-    const height = this.mount.clientHeight
+    const width = this.mount.clientWidth;
+    const height = this.mount.clientHeight;
 
-    scene = new THREE.Scene()
-    camera = new THREE.PerspectiveCamera(35, width / height, 1, 15 )
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(35, width / height, 1, 15 );
     camera.position.set( 0, 0.15, 3 );
 
     cameraTarget = new THREE.Vector3( 0, - 0.1, 0 );
@@ -111,41 +111,47 @@ class SceneSample extends Component {
     renderer.setSize(1200, 760);
     
 
+    // 테스트 : 아  몰라 ~~~!
+    // renderer.setSize(window.innerWidth / 100 * 70 - 34, window.innerHeight);
+    
 		renderer.outputEncoding = THREE.sRGBEncoding;
 
     // 추가 - 마우스 콘트롤
-    const controls = new OrbitControls(camera, renderer.domElement)
-    controls.enableDamping = true
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
 
     renderer.shadowMap.enabled = true;
 
-    this.scene = scene
-    this.camera = camera
-    this.cameraTarget = cameraTarget
-    this.renderer = renderer
+    this.scene = scene;
+    this.camera = camera;
+    this.cameraTarget = cameraTarget;
+    this.renderer = renderer;
 
-    this.mount.appendChild(this.renderer.domElement)
-    this.start()
+    // 테스트 대상임 이걸로 width 100%, height 100% 만들어야함
+    console.log(renderer.domElement);
+
+    this.mount.appendChild(this.renderer.domElement);
+    this.start();
   }
 
   componentWillUnmount() {
-    this.stop()
-    this.mount.removeChild(this.renderer.domElement)
+    this.stop();
+    this.mount.removeChild(this.renderer.domElement);
   }
 
   start() {
     if (!this.frameId) {
-      this.frameId = requestAnimationFrame(this.animate)
+      this.frameId = requestAnimationFrame(this.animate);
     }
   }
 
   stop() {
-    cancelAnimationFrame(this.frameId)
+    cancelAnimationFrame(this.frameId);
   }
 
   animate() {
-    this.renderScene()
-    this.frameId = window.requestAnimationFrame(this.animate)
+    this.renderScene();
+    this.frameId = window.requestAnimationFrame(this.animate);
   }
 
   renderScene() {
@@ -153,7 +159,7 @@ class SceneSample extends Component {
     // this.camera.position.x = Math.sin( timer ) * 2.5;
     // this.camera.position.z = Math.cos( timer ) * 2.5;
     this.camera.lookAt( this.cameraTarget );
-    this.renderer.render(this.scene, this.camera)
+    this.renderer.render(this.scene, this.camera);
   }
 
   render() {

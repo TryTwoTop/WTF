@@ -22,7 +22,7 @@ const upload_style = {
 };
 
 export default function UploadButton({ name, id }) {
-  const [encodedFile, setEncodedFile] = useState(0);
+  const [encodedFile, setEncodedFile] = useState('0');
   const [fileName, setFileName] = useState('Upload');
 
   const onChange = e => {

@@ -13,7 +13,6 @@ const hr_style = {
 function App() {
   //creating IP state
   const [ip, setIP] = useState('');
-  //  const [id, setID] = useState('Unknown');
 
    //creating function to load ip address from the API
    const getData = async () => {
