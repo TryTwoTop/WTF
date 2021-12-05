@@ -61,7 +61,12 @@ function LeftScreen({ uid= 'Unknown' }) {
   
   return (
     <div id="leftScreen">
-      <form action="" method="post" encType="multipart/form-data">
+      <form action="" method="post" encType="multipart/form-data"
+      onSubmit={function(e){
+          e.preventDefault();
+          console.log('사용자가 Generate 버튼 누름!');
+        }.bind(this)}
+      >
         <input type="hidden" name="uid" value={uid} />
 
         {/* 옷 */}

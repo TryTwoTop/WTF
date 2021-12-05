@@ -2,17 +2,19 @@ import React, { Component } from 'react';
 import { PLYLoader } from 'three/examples/jsm/loaders/PLYLoader';
 import * as THREE from 'three';
 
+// 추가 - 마우스 콘트롤
+// 문제시 바로 삭제
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+
+// 추가 - 현재 상황
+// 문제 시 바로 삭제
+import Stats from 'three/examples/jsm/libs/stats.module';
 
 import dol from './ply/dolphins_be.ply';
 import dol2 from './ply/dolphins_le.ply';
 import lucky from './ply/Lucy100k.ply';
 import jjs from './ply/jjs.ply';
 import jjsTest from './ply/jjsTest.ply';
-
-// 추가 - 마우스 콘트롤
-// 문제시 바로 삭제
-
 
 function addShadowedLight( x, y, z, color, intensity, scene) {
   const directionalLight = new THREE.DirectionalLight( color, intensity );
@@ -54,6 +56,12 @@ class SceneSample extends Component {
 
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(35, width / height, 1, 15 );
+    // camera = new THREE.PerspectiveCamera(
+    //   75,
+    //   window.innerWidth / window.innerHeight,
+    //   0.1,
+    //   1000
+    // );
     camera.position.set( 0, 0.15, 3 );
 
     cameraTarget = new THREE.Vector3( 0, - 0.1, 0 );
@@ -63,9 +71,7 @@ class SceneSample extends Component {
 		scene.fog = new THREE.Fog( 0x72645b, 2, 15 );
 
     const loader = new PLYLoader();
-    // const base = "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/ply/"
-    //loader.load( base + "binary/Lucy100k.ply", function ( geometry ) {
-    loader.load(lucky, function ( geometry ) {
+    loader.load('./ply/Lucy100k.ply', function ( geometry ) {
       geometry.computeVertexNormals();
   
       var material = new THREE.MeshStandardMaterial( { color: 0x0055ff, flatShading: true } );
