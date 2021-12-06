@@ -71,7 +71,7 @@ class SceneSample extends Component {
 		scene.fog = new THREE.Fog( 0x72645b, 2, 15 );
 
     const loader = new PLYLoader();
-    loader.load('./ply/Lucy100k.ply', function ( geometry ) {
+    loader.load(this.props.plyFile, function ( geometry ) {
       geometry.computeVertexNormals();
   
       var material = new THREE.MeshStandardMaterial( { color: 0x0055ff, flatShading: true } );

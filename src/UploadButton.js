@@ -21,7 +21,7 @@ const upload_style = {
   fontSize: '18px',
 };
 
-export default function UploadButton({ name, id }) {
+export default function UploadButton({ name, id, setForPost }) {
   const [encodedFile, setEncodedFile] = useState('0');
   const [fileName, setFileName] = useState('Upload');
 
@@ -53,8 +53,10 @@ export default function UploadButton({ name, id }) {
     reader.onload = () => {
       if (id === 'clothesFile') {        // 옷 파일이라면
         setEncodedFile(reader.result);
+        setForPost(reader.result);
       } else if (id === 'modelFile') {   // 모델 파일이라면
         setEncodedFile(reader.result);
+        setForPost(reader.result);
       }
       onLoad(reader.result);
     };

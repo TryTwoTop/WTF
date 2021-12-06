@@ -14,6 +14,9 @@ function App() {
   //creating IP state
   const [ip, setIP] = useState('');
 
+  // ply 파일
+  const [plyFile, setPlyFile] = useState('./ply/Lucy100k.ply');
+
    //creating function to load ip address from the API
    const getData = async () => {
      const res = await axios.get('https://geolocation-db.com/json/');
@@ -32,8 +35,8 @@ function App() {
       <Top ip={ip} />
       <hr style={hr_style} />
 
-      <LeftScreen uid={ip} />
-      <RightScreen />
+      <LeftScreen uid={ip} setPlyFile={setPlyFile} />
+      <RightScreen plyFile={plyFile} />
     </>
   );
 }
