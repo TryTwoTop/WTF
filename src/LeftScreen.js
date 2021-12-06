@@ -5,8 +5,17 @@ import SampleClothes from './SampleClothes';
 import SampleModels from './SampleModels';
 import SubmitButton from './SubmitButton';
 import UploadButton from './UploadButton';
-import CheckServer from './CheckServer';
+
 import axios from 'axios';
+
+import green from './images/greenCircle.png';
+import red from './images/redCircle.png';
+
+const circle_style = {
+  position: 'relative',
+  top: '1px',
+  marginRight: '10px',
+};
 
 // Help 컴포넌트 id 구현하기
 
@@ -17,10 +26,11 @@ import axios from 'axios';
 
 function LeftScreen({ uid= 'Unknown', setPlyFile }) {
 
-  const [checkServer, setCheckServer] = useState(false);
-
   const [userClothes, setUserClothes] = useState(null);
   const [userModel, setUserModel] = useState(null);
+
+  const [circle, setCircle] = useState(red);
+  const [sentence, setSentence] = useState('서버 연결 실패');
 
   //console.log(`/wtf/user_directory?uid=${uid}`);
 
@@ -31,8 +41,7 @@ function LeftScreen({ uid= 'Unknown', setPlyFile }) {
       console.log(res.IPv4);
       uid = res.IPv4;
       connectServer();
-    }), []
-  );
+    }), []);
 
   function connectServer() {
     fetch(`/wtf/user_directory?uid=${uid}`)
@@ -40,10 +49,13 @@ function LeftScreen({ uid= 'Unknown', setPlyFile }) {
     .then(res => {
       if (res.status === 'success') {
         console.log('서버 연결 성공!');
-        setCheckServer(true);
+        setCircle(green);
+        setSentence('서버 연결 성공')
       } else {
         console.log('서버 연결 실패!');
         console.log(res.status);
+        setCircle(red);
+        setSentence('서버 연결 실패');
       }
     })
     .catch(err => {
@@ -51,7 +63,8 @@ function LeftScreen({ uid= 'Unknown', setPlyFile }) {
       console.log(err);
     })
   };
-  
+
+
   function onSubmit(e) {
     e.preventDefault();
 
@@ -99,7 +112,10 @@ function LeftScreen({ uid= 'Unknown', setPlyFile }) {
         <SubmitButton value="Generate" />
 
         {/* 서버 연결 여부 */}
-        <CheckServer>{checkServer}</CheckServer>
+        <h3>
+          <img src={circle} alt="서버 연결 여부" width="15" style={circle_style} />
+          {sentence}
+        </h3>
       </form>
     </div>
   );
