@@ -5,9 +5,7 @@ import SampleClothes from './SampleClothes';
 import SampleModels from './SampleModels';
 import SubmitButton from './SubmitButton';
 import UploadButton from './UploadButton';
-
-import green from './images/greenCircle.png';
-import red from './images/redCircle.png';
+import CheckServer from './CheckServer';
 
 // Help 컴포넌트 id 구현하기
 
@@ -16,16 +14,9 @@ import red from './images/redCircle.png';
 
 // 여기서 유저 디렉토리를 만드는 URL 에 접근 하도록 하기
 
-const circle_style = {
-  position: 'relative',
-  top: '1px',
-  marginRight: '10px',
-};
-
 function LeftScreen({ uid= 'Unknown' }) {
 
-  const [serverConnection, setServerConnection] = useState('서버 연결 실패');
-  const [circle, setCircle] = useState(red);
+  const [checkServer, setCheckServer] = useState(false);
 
   //console.log(`/wtf/user_directory?uid=${uid}`);
 
@@ -45,8 +36,7 @@ function LeftScreen({ uid= 'Unknown' }) {
     .then(res => {
       if (res.status === 'success') {
         console.log('서버 연결 성공!');
-        setServerConnection('서버 연결 성공');
-        setCircle(green);
+        setCheckServer(true);
       } else {
         console.log('서버 연결 실패!');
         console.log(res.status);
@@ -58,15 +48,27 @@ function LeftScreen({ uid= 'Unknown' }) {
     })
   };
   
+  function onSubmit(e) {
+    e.preventDefault();
+
+    console.log('submit button clicked!');
+    
+    // axios.post('/', {
+    //   firstName: 'Fred',
+    //   lastName: 'Flintstone'
+    // })
+    // .then(res => res.json())
+    // .t
+    // .catch(err => {
+    //   console.log('post 옹류');
+    //   console.log(err);
+    // })
+
+  }
   
   return (
     <div id="leftScreen">
-      <form action="" method="post" encType="multipart/form-data"
-      onSubmit={function(e){
-          e.preventDefault();
-          console.log('사용자가 Generate 버튼 누름!');
-        }.bind(this)}
-      >
+      <form action="" method="post" encType="multipart/form-data" onSubmit={onSubmit} >
         <input type="hidden" name="uid" value={uid} />
 
         {/* 옷 */}
@@ -86,10 +88,7 @@ function LeftScreen({ uid= 'Unknown' }) {
         <SubmitButton value="Generate" />
 
         {/* 서버 연결 여부 */}
-        <h3>
-          <img src={circle} alt="서버 연결 여부" width="15" style={circle_style} />
-          {serverConnection}
-        </h3>
+        <CheckServer>{checkServer}</CheckServer>
       </form>
     </div>
   );

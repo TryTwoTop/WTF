@@ -16,17 +16,15 @@ function App() {
 
    //creating function to load ip address from the API
    const getData = async () => {
-     const res = await axios.get('https://geolocation-db.com/json/')
+     const res = await axios.get('https://geolocation-db.com/json/');
      const IPv4 = res.data.IPv4;
     //  const ID = IPv4.split('.').join("");
-    //  console.log(res.data);
      setIP(IPv4);
-    //  setID(ID);
    }
    
-   useEffect( () => {
+   useEffect(() => {
      //passing getData method to the lifecycle method
-     getData()
+     getData();
    }, [])
 
   return (
