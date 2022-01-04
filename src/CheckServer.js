@@ -3,23 +3,18 @@ import { useEffect, useState } from "react";
 import green from "./images/greenCircle.png";
 import red from "./images/redCircle.png";
 
-const circle_style = {
+const circleStyle = {
   position: "relative",
   top: "1px",
   marginRight: "10px",
 };
 
+const CONNECTION_SUCCESS = ["success", "directory exists"];
+
 function CheckServer({ uid }) {
-  // 기본 설정
   const [circle, setCircle] = useState(red);
 
-  useEffect(() => {
-    if (uid !== "") {
-      connectServer();
-    }
-  }, [uid]);
-
-  function connectServer() {
+  const checkServer = () => {
     // fetch(`/wtf/user_directory?uid=${uid}`)
     //   .then((res) => res.json())
     //   .then((res) => {
@@ -35,7 +30,7 @@ function CheckServer({ uid }) {
     //     }
     //   })
     //   .catch((err) => {
-    //     console.log("fetch 예외처리 작동");
+    //     console.log("checkServer API 오류 발생");
     //     console.log(err);
     //   });
 
@@ -44,8 +39,8 @@ function CheckServer({ uid }) {
         uid: uid,
       })
       .then((res) => {
-        if (res.status === "success") {
-          console.log("서버 연결 성공!");
+        if (CONNECTION_SUCCESS.includes(res.status)) {
+          console.log("서버 연결 성공!", res.status);
           setCircle(green);
         } else {
           console.log("서버 연결 실패!");
@@ -54,14 +49,20 @@ function CheckServer({ uid }) {
         }
       })
       .catch((err) => {
-        console.log("fetch 예외처리 작동");
+        console.log("checkServer API 오류 발생");
         console.log(err);
       });
-  }
+  };
+
+  useEffect(() => {
+    if (uid !== "") {
+      checkServer();
+    }
+  }, [uid]);
 
   return (
     <h3>
-      <img src={circle} alt="서버 연결 여부" width="15" style={circle_style} />
+      <img src={circle} alt="서버 연결 여부" width="15" style={circleStyle} />
       {circle === green ? "서버 연결 성공" : "서버 연결 실패"}
     </h3>
   );

@@ -4,7 +4,7 @@ import RightScreen from "./RightScreen";
 import Top from "./Top";
 
 // hr 태그의 스타일
-const hr_style = {
+const hrStyle = {
   clear: "both",
 };
 
@@ -12,17 +12,14 @@ function App() {
   const [IP, setIP] = useState("");
   const [plyFile, setPlyFile] = useState("./ply/Lucy100k.ply");
 
-  // const getData = async () => {
-  //   const res = await axios.get("https://geolocation-db.com/json/");
-  //   const IPv4 = res.data.IPv4;
-  //   const ID = IPv4.split(".").join("");
-  //   setIP(IPv4);
-  // };
-
   const getIP = () => {
     fetch("https://geolocation-db.com/json/")
       .then((res) => res.json())
-      .then((res) => setIP(res.IPv4));
+      .then((res) => setIP(res.IPv4))
+      .catch((err) => {
+        console.log("IP API 오류 발생");
+        console.log(err);
+      });
   };
 
   useEffect(() => {
@@ -31,9 +28,9 @@ function App() {
 
   return (
     <>
-      <Top ip={IP} />
+      <Top IP={IP} />
 
-      <hr style={hr_style} />
+      <hr style={hrStyle} />
 
       <main>
         <LeftScreen uid={IP} setPlyFile={setPlyFile} />
