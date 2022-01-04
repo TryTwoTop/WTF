@@ -11,7 +11,7 @@ import CheckServer from "./CheckServer";
 
 // Help 컴포넌트 id 구현하기
 
-function LeftScreen({ uid, setPlyFile }) {
+function LeftScreen({ uuid, setPlyFile }) {
   const [clothes, setClothes] = useState(null);
   const [model, setModel] = useState(null);
 
@@ -23,14 +23,14 @@ function LeftScreen({ uid, setPlyFile }) {
     // axios의 post 전송
     // http://daplus.net/http-get-post-요청을-수락하는-http-테스트-서버/
     axios
-      .post("/", {
-        uid: uid,
+      .post("http://localhost:5000/", {
+        uid: uuid,
         uploaded_cloth: clothes,
         uploaded_model: model,
       })
       .then((res) => {
         console.log("로드 도전!");
-        setPlyFile(res);
+        setPlyFile(res.data);
       })
       .catch((err) => {
         console.log("생성 POST 오류");
@@ -65,7 +65,7 @@ function LeftScreen({ uid, setPlyFile }) {
 
         <SubmitButton />
       </form>
-      <CheckServer uid={uid} />
+      <CheckServer uuid={uuid} />
     </div>
   );
 }

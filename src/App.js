@@ -3,37 +3,34 @@ import LeftScreen from "./LeftScreen";
 import RightScreen from "./RightScreen";
 import Top from "./Top";
 
+import { v4 as uuidv4 } from "uuid";
+
 // hr 태그의 스타일
 const hrStyle = {
   clear: "both",
 };
 
 function App() {
-  const [IP, setIP] = useState("");
   const [plyFile, setPlyFile] = useState("./ply/Lucy100k.ply");
+  const [uuid, setUuid] = useState(null);
 
-  const getIP = () => {
-    fetch("https://geolocation-db.com/json/")
-      .then((res) => res.json())
-      .then((res) => setIP(res.IPv4))
-      .catch((err) => {
-        console.log("IP API 오류 발생");
-        console.log(err);
-      });
+  const getUuid = () => {
+    const uuid = uuidv4();
+    setUuid(uuid);
   };
 
   useEffect(() => {
-    getIP();
+    getUuid();
   }, []);
 
   return (
     <>
-      <Top IP={IP} />
+      <Top userId={uuid} />
 
       <hr style={hrStyle} />
 
       <main>
-        <LeftScreen uid={IP} setPlyFile={setPlyFile} />
+        <LeftScreen uuid={uuid} setPlyFile={setPlyFile} />
         <RightScreen plyFile={plyFile} />
       </main>
     </>
