@@ -135,6 +135,7 @@ class SceneSample extends Component {
 
     // 테스트 대상임 이걸로 width 100%, height 100% 만들어야함
     console.log(renderer.domElement);
+    console.dir(renderer.domElement);
 
     this.mount.appendChild(this.renderer.domElement);
     this.start();

@@ -1,42 +1,44 @@
-import axios from "axios";
-import { useEffect } from "react";
-import { useState } from "react/cjs/react.development";
+import { useEffect, useState } from "react";
 import LeftScreen from "./LeftScreen";
 import RightScreen from "./RightScreen";
 import Top from "./Top";
 
 // hr 태그의 스타일
 const hr_style = {
-  clear: 'both'
+  clear: "both",
 };
 
 function App() {
-  //creating IP state
-  const [ip, setIP] = useState('');
+  const [IP, setIP] = useState("");
+  const [plyFile, setPlyFile] = useState("./ply/Lucy100k.ply");
 
-  // ply 파일
-  const [plyFile, setPlyFile] = useState('./ply/Lucy100k.ply');
+  // const getData = async () => {
+  //   const res = await axios.get("https://geolocation-db.com/json/");
+  //   const IPv4 = res.data.IPv4;
+  //   const ID = IPv4.split(".").join("");
+  //   setIP(IPv4);
+  // };
 
-   //creating function to load ip address from the API
-   const getData = async () => {
-     const res = await axios.get('https://geolocation-db.com/json/');
-     const IPv4 = res.data.IPv4;
-    //  const ID = IPv4.split('.').join("");
-     setIP(IPv4);
-   }
-   
-   useEffect(() => {
-     //passing getData method to the lifecycle method
-     getData();
-   }, [])
+  const getIP = () => {
+    fetch("https://geolocation-db.com/json/")
+      .then((res) => res.json())
+      .then((res) => setIP(res.IPv4));
+  };
+
+  useEffect(() => {
+    getIP();
+  }, []);
 
   return (
     <>
-      <Top ip={ip} />
+      <Top ip={IP} />
+
       <hr style={hr_style} />
 
-      <LeftScreen uid={ip} setPlyFile={setPlyFile} />
-      <RightScreen plyFile={plyFile} />
+      <main>
+        <LeftScreen uid={IP} setPlyFile={setPlyFile} />
+        <RightScreen plyFile={plyFile} />
+      </main>
     </>
   );
 }

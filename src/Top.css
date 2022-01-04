@@ -1,8 +1,8 @@
-#top {
+header {
   padding: 7px 10px;
 }
 
-#top img {
+header img {
   width: 300px;
   float: left;
 
@@ -13,14 +13,14 @@
   margin: 0;
 }
 
-#top p {
+header p {
   float: right;
   font-size: 20px;
 
   margin: 5px 0;
 }
 
-#top h1 {
+header h1 {
   text-align: center;
   font-size: 48px;
 
