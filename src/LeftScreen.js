@@ -17,6 +17,32 @@ function LeftScreen({ uid, setPlyFile }) {
 
   const atob = (str) => Buffer.from(str, "base64").toString("binary");
 
+  const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
+    const byteCharacters = atob(b64Data);
+    const byteArrays = [];
+  
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      const slice = byteCharacters.slice(offset, offset + sliceSize);
+  
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+  
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+  
+    const blob = new Blob(byteArrays, {type: contentType});
+    return blob;
+  }
+
+  function blobToDataURL(blob, callback) {
+      var a = new FileReader();
+      a.onload = function(e) {callback(e.target.result);}
+      a.readAsDataURL(blob);
+  }
+
   const onSubmit = (e) => {
     e.preventDefault();
 
@@ -24,7 +50,7 @@ function LeftScreen({ uid, setPlyFile }) {
     // https://github.com/axios/axios
     // http://daplus.net/http-get-post-요청을-수락하는-http-테스트-서버/
     axios
-      .post("http://localhost:5000/", {
+      .post("http://localhost:5000/wtf/3dtryon", {
         uid: uid,
         uploaded_cloth: clothes,
         uploaded_model: model,
@@ -33,9 +59,11 @@ function LeftScreen({ uid, setPlyFile }) {
         const data = res.data;
 
         if (data.status === "success") {
-          console.log("로드 도전!");
-          const result = atob(data["3d_model"]);
-          setPlyFile(result);
+          const result = data["3d_model"];
+          const blob = b64toBlob(result, "application/octet-stream");
+          blobToDataURL(blob, function(dataurl){
+            setPlyFile(dataurl);
+          });
         } else {
           alert("실패!");
         }

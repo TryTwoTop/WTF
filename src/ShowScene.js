@@ -3,7 +3,9 @@ import * as THREE from "three";
 import { PLYLoader } from "three/examples/jsm/loaders/PLYLoader";
 
 // 추가 - 마우스 콘트롤
+import equal from 'fast-deep-equal'
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { runInThisContext } from "vm";
 
 // 추가 - 현재 상황
 // import Stats from "three/examples/jsm/libs/stats.module";
@@ -39,9 +41,21 @@ class ShowScene extends Component {
     this.start = this.start.bind(this);
     this.stop = this.stop.bind(this);
     this.animate = this.animate.bind(this);
+    console.log(this.props.plyFile);
   }
 
   componentDidMount() {
+    this.renderPlyFile();
+  }
+  componentDidUpdate(prevProps) {
+    if(!equal(this.props.plyFile, prevProps.plyFile)) // Check if it's a new user, you can also use some unique property, like the ID  (this.props.user.id !== prevProps.user.id)
+    {
+      this.mount.removeChild(this.renderer.domElement);
+      this.renderPlyFile();
+    }
+  } 
+  
+  renderPlyFile(){
     let camera, cameraTarget, scene, renderer;
     const width = this.mount.clientWidth;
     const height = this.mount.clientHeight;
@@ -64,6 +78,7 @@ class ShowScene extends Component {
     scene.fog = new THREE.Fog(0x72645b, 2, 15);
 
     const loader = new PLYLoader();
+    
     loader.load(this.props.plyFile, function (geometry) {
       // geometry.computeVertexNormals();
 
