@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 import { useState } from "react";
 
 // 출처
@@ -9,69 +9,53 @@ import { useState } from "react";
 
 // https://jcon.tistory.com/187
 
-const Input = styled('input')({
-  display: 'none',
+const Input = styled("input")({
+  display: "none",
 });
 
-const upload_style = {
-  width: '50%',
-  marginLeft: '10px',
-  marginRight: '10px',
-  textTransform: 'none',
-  fontSize: '18px',
+const uploadStyle = {
+  width: "50%",
+  marginLeft: "10px",
+  marginRight: "10px",
+  textTransform: "none",
+  fontSize: "18px",
 };
 
-export default function UploadButton({ name, id, setForPost }) {
-  const [encodedFile, setEncodedFile] = useState('0');
-  const [fileName, setFileName] = useState('Upload');
+export default function UploadButton({ id, setForPost }) {
+  const [encodedFile, setEncodedFile] = useState("");
+  const [fileName, setFileName] = useState("Upload");
 
-  const onChange = e => {
-    setFileName(e.target.files[0].name);
-    // 아이디 확인하려고 변수에 저장
-    const id = e.target.id;
-    const files = e.target.files;
-    const file = files[0];
-    getBase64(file, id);
+  const onChange = (e) => {
+    const file = e.target.files[0];
+    setFileName(file.name);
+    getBase64(file);
   };
 
-  const onLoad = fileString => {
-    // console.log(fileString);
-    console.log('로드!!!')
-  };
-
-  // const getBase64 = file => {
-  //   let reader = new FileReader();
-  //   reader.readAsDataURL(file);
-  //   reader.onload = () => {
-  //     onLoad(reader.result);
-  //   };
+  // const onLoad = (fileString) => {
+  //   console.log(fileString);
   // };
 
-  function getBase64(file, id) {
+  const getBase64 = (file) => {
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-      if (id === 'clothesFile') {        // 옷 파일이라면
-        setEncodedFile(reader.result);
-        setForPost(reader.result);
-      } else if (id === 'modelFile') {   // 모델 파일이라면
-        setEncodedFile(reader.result);
-        setForPost(reader.result);
-      }
-      onLoad(reader.result);
+      setEncodedFile(reader.result);
+      setForPost(reader.result.substring(22));
+      // onLoad(reader.result);
     };
-  }
+  };
 
   return (
     <>
       <label htmlFor={id}>
         <Input accept="image/*" id={id} type="file" onChange={onChange} />
-        <Button style={upload_style} variant="contained" component="span">
+        <Button style={uploadStyle} variant="contained" component="span">
           {fileName}
-        </Button>  
+        </Button>
       </label>
-      <input type="hidden" name={name} value={encodedFile} />
-      <img src={encodedFile} alt="사진" width="100%" />
+      {encodedFile !== "" ? (
+        <img src={encodedFile} alt="사진" height="480px" />
+      ) : null}
     </>
   );
 }

@@ -11,29 +11,37 @@ import CheckServer from "./CheckServer";
 
 // Help 컴포넌트 id 구현하기
 
-function LeftScreen({ uuid, setPlyFile }) {
-  const [clothes, setClothes] = useState(null);
-  const [model, setModel] = useState(null);
+function LeftScreen({ uid, setPlyFile }) {
+  const [clothes, setClothes] = useState("");
+  const [model, setModel] = useState("");
 
-  const onSubmit = (event) => {
-    event.preventDefault();
+  const atob = (str) => Buffer.from(str, "base64").toString("binary");
+
+  const onSubmit = (e) => {
+    e.preventDefault();
 
     // https://any-ting.tistory.com/16
     // https://github.com/axios/axios
-    // axios의 post 전송
     // http://daplus.net/http-get-post-요청을-수락하는-http-테스트-서버/
     axios
       .post("http://localhost:5000/", {
-        uid: uuid,
+        uid: uid,
         uploaded_cloth: clothes,
         uploaded_model: model,
       })
       .then((res) => {
-        console.log("로드 도전!");
-        setPlyFile(res.data);
+        const data = res.data;
+
+        if (data.status === "success") {
+          console.log("로드 도전!");
+          const result = atob(data["3d_model"]);
+          setPlyFile(result);
+        } else {
+          alert("실패!");
+        }
       })
       .catch((err) => {
-        console.log("생성 POST 오류");
+        console.log("Generate 버튼 전송 POST 실패");
         console.log(err);
       });
   };
@@ -43,29 +51,21 @@ function LeftScreen({ uuid, setPlyFile }) {
       <form encType="multipart/form-data" onSubmit={onSubmit}>
         {/* 옷 */}
         <span className="areaName">Clothes</span>
-        <UploadButton
-          name="uploaded_cloth"
-          id="clothesFile"
-          setForPost={setClothes}
-        />
+        <UploadButton id="clothesFile" setForPost={setClothes} />
         <span className="areaName">OR</span>
         <Help id="clothes" />
         <SampleClothes />
 
         {/* 모델 */}
         <span className="areaName">Model</span>
-        <UploadButton
-          name="uploaded_model"
-          id="modelFile"
-          setForPost={setModel}
-        />
+        <UploadButton id="modelFile" setForPost={setModel} />
         <span className="areaName">OR</span>
         <Help id="model" />
         <SampleModels />
 
         <SubmitButton />
       </form>
-      <CheckServer uuid={uuid} />
+      <CheckServer uid={uid} />
     </div>
   );
 }

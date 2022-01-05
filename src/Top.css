@@ -17,7 +17,8 @@ header p {
   float: right;
   font-size: 20px;
 
-  margin-top: 20px;
+  position: relative;
+  top: 5px;
 }
 
 header h1 {

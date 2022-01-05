@@ -1,10 +1,10 @@
-import './RightScreen.css';
-import SceneSample from './SceneSample';
+import "./RightScreen.css";
+import ShowScene from "./ShowScene";
 
 function RightScreen({ plyFile }) {
   return (
     <div id="rightScreen">
-      <SceneSample plyFile={plyFile} />
+      <ShowScene plyFile={plyFile} />
       <h5>Virtual Try-ON</h5>
     </div>
   );

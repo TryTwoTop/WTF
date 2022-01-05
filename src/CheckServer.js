@@ -11,13 +11,13 @@ const circleStyle = {
 
 const CONNECTION_SUCCESS = ["success", "directory exists"];
 
-function CheckServer({ uuid }) {
+function CheckServer({ uid }) {
   const [circle, setCircle] = useState(red);
 
   const checkServer = () => {
     axios
       .post("http://localhost:5000/wtf/user_directory", {
-        uid: uuid,
+        uid: uid,
       })
       .then((res) => {
         if (CONNECTION_SUCCESS.includes(res.data.status)) {
@@ -36,10 +36,10 @@ function CheckServer({ uuid }) {
   };
 
   useEffect(() => {
-    if (uuid !== null) {
+    if (uid !== null) {
       checkServer();
     }
-  }, [uuid]);
+  }, [uid]);
 
   return (
     <h3>
