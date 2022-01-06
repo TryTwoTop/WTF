@@ -6,21 +6,14 @@ const Input = styled("input")({
   display: "none",
 });
 
-const submitStyle = {
-  width: "50%",
-  textTransform: "none",
-  fontSize: "20px",
-  fontWeight: "bold",
-};
-
 const btnName = "generate";
 
-export default function SubmitButton() {
+export default function SubmitButton({ style }) {
   return (
     <label htmlFor={btnName}>
       <Input type="submit" id={btnName} />
       <Button
-        style={submitStyle}
+        style={style}
         variant="contained"
         endIcon={<SendIcon />}
         component="span"

@@ -21,7 +21,7 @@ const uploadStyle = {
   fontSize: "18px",
 };
 
-export default function UploadButton({ id, setForPost }) {
+export default function UploadButton({ id, setForPost, disabled }) {
   const [encodedFile, setEncodedFile] = useState("");
   const [fileName, setFileName] = useState("Upload");
 
@@ -48,8 +48,19 @@ export default function UploadButton({ id, setForPost }) {
   return (
     <>
       <label htmlFor={id}>
-        <Input accept="image/*" id={id} type="file" onChange={onChange} />
-        <Button style={uploadStyle} variant="contained" component="span">
+        <Input
+          disabled={disabled}
+          accept="image/*"
+          id={id}
+          type="file"
+          onChange={onChange}
+        />
+        <Button
+          disabled={disabled}
+          style={uploadStyle}
+          variant="contained"
+          component="span"
+        >
           {fileName}
         </Button>
       </label>
