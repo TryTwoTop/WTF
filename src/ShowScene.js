@@ -39,21 +39,22 @@ class ShowScene extends Component {
   constructor(props) {
     super(props);
 
-    this.start = this.start.bind(this);
-    this.stop = this.stop.bind(this);
+    //this.start = this.start.bind(this);
+    //this.stop = this.stop.bind(this);
     this.animate = this.animate.bind(this);
     console.log(this.props.plyFile);
   }
 
   componentDidMount() {
     this.renderPlyFile();
+    this.animate();
   }
 
   componentDidUpdate(prevProps) {
     if (!equal(this.props.plyFile, prevProps.plyFile)) {
-      // Check if it's a new user, you can also use some unique property, like the ID  (this.props.user.id !== prevProps.user.id)
       this.mount.removeChild(this.renderer.domElement);
       this.renderPlyFile();
+      this.animate();
     }
   }
 
@@ -64,6 +65,7 @@ class ShowScene extends Component {
 
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(35, width / height, 1, 15);
+    
     // camera = new THREE.PerspectiveCamera(
     //   75,
     //   window.innerWidth / window.innerHeight,
@@ -71,9 +73,10 @@ class ShowScene extends Component {
     //   1000
     // );
     // camera.position.set(-1, 3, 3);
-    camera.position.set(0, 0.6, 3);
+    //camera.position.set(0, 0.6, 3);
 
     cameraTarget = new THREE.Vector3(0, 0.35, 0);
+    camera.position.set(0, 0.6, 3);
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x72645b);
@@ -145,7 +148,24 @@ class ShowScene extends Component {
     controls.enableDamping = true;
 
     renderer.shadowMap.enabled = true;
+
+    console.log(renderer);
     renderer.xr.enabled = true;
+    
+    //codes from https://coderedirect.com/questions/307652/unable-to-change-camera-position-when-using-vrcontrols
+    
+    const cameraGroup = new THREE.Group();
+    cameraGroup.position.set(0, -1, 1.5);
+
+    renderer.xr.addEventListener('sessionstart', function () {
+      scene.add(cameraGroup);
+      cameraGroup.add(camera);
+    });
+
+    renderer.xr.addEventListener('sessionend', function () {
+      scene.remove(cameraGroup);
+      cameraGroup.remove(camera);
+    });
 
     this.scene = scene;
     this.camera = camera;
@@ -153,40 +173,21 @@ class ShowScene extends Component {
     this.renderer = renderer;
 
     // 테스트 대상임 이걸로 width 100%, height 100% 만들어야함
-    console.log(renderer.domElement);
-
+    //console.log(renderer.domElement);
     this.mount.appendChild(this.renderer.domElement);
-    this.mount.appendChild(VRButton.createButton(renderer));
-    this.start();
+    this.mount.appendChild(VRButton.createButton(this.renderer));
   }
 
   componentWillUnmount() {
-    this.stop();
+    //this.stop();
     this.mount.removeChild(this.renderer.domElement);
   }
 
-  start() {
-    if (!this.frameId) {
-      this.frameId = requestAnimationFrame(this.animate);
-    }
-  }
-
-  stop() {
-    cancelAnimationFrame(this.frameId);
-  }
-
   animate() {
-    this.renderScene();
-    this.frameId = window.requestAnimationFrame(this.animate);
-  }
-
-  renderScene() {
-    // const timer = Date.now() * 0.0005;
-    // this.camera.position.x = Math.sin( timer ) * 2.5;
-    // this.camera.position.z = Math.cos( timer ) * 2.5;
-
-    this.camera.lookAt(this.cameraTarget);
-    this.renderer.render(this.scene, this.camera);
+    this.renderer.setAnimationLoop(this.renderScene = () => {
+      this.camera.lookAt(this.cameraTarget);
+      this.renderer.render(this.scene, this.camera);
+    });
   }
 
   render() {
