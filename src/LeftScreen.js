@@ -1,17 +1,17 @@
 import { useState } from "react";
 import Help from "./Help";
 import "./LeftScreen.css";
-import SampleClothes from "./SampleClothes";
-import SampleModels from "./SampleModels";
 import SubmitButton from "./SubmitButton";
 import UploadButton from "./UploadButton";
 
 import axios from "axios";
 import CheckServer from "./CheckServer";
 
-// test
 import LoadingButton from "@mui/lab/LoadingButton";
 import SendIcon from "@mui/icons-material/Send";
+import SelectedImg from "./SelectedImg";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 // Help 컴포넌트 id 구현하기
 
@@ -27,10 +27,17 @@ const loadingStyle = {
   backgroundColor: "rgb(224, 224, 224)",
 };
 
+const helpText = {
+  clothes: "입어보고 싶은 상의를 업로드 해주세요",
+  model: "머리부터 발끝까지 보이는 본인의 신체 사진을 업로드 해주세요",
+};
+
 function LeftScreen({ uid, setPlyFile }) {
   const [clothes, setClothes] = useState("");
   const [model, setModel] = useState("");
   const [disabled, setDisabled] = useState(false);
+
+  const MySwal = withReactContent(Swal);
 
   // https://www.code-helper.com/answers/decodes-a-string-of-data-which-has-been-encoded-using-base-64-encoding-nodejs
   const atob = (str) => Buffer.from(str, "base64").toString("binary");
@@ -65,13 +72,23 @@ function LeftScreen({ uid, setPlyFile }) {
 
   const onSubmit = (e) => {
     e.preventDefault();
+
+    if (clothes === "" || model === "") {
+      MySwal.fire({
+        icon: "error",
+        title: "파일 부족",
+        text: "파일을 모두 업로드해주세요",
+      });
+      return;
+    }
+
     setDisabled(true);
 
     // https://any-ting.tistory.com/16
     // https://github.com/axios/axios
     // http://daplus.net/http-get-post-요청을-수락하는-http-테스트-서버/
     axios
-      .post("http://localhost:5000/wtf/3dtryon", {
+      .post("http://192.168.154.29:5000/wtf/3dtryon", {
         uid: uid,
         uploaded_cloth: clothes,
         uploaded_model: model,
@@ -101,27 +118,33 @@ function LeftScreen({ uid, setPlyFile }) {
   return (
     <div id="leftScreen">
       <form onSubmit={onSubmit}>
-        {/* 옷 */}
-        <span className="areaName">Clothes</span>
-        <UploadButton
-          id="clothesFile"
-          setForPost={setClothes}
-          disabled={disabled}
-        />
-        <span className="areaName">OR</span>
-        <Help id="clothes" />
-        <SampleClothes />
+        <div style={{ float: "left" }}>
+          <div className="areaName" style={{ marginTop: "13px" }}>
+            Clothes
+          </div>
+          <div className="areaName" style={{ marginTop: "23px" }}>
+            Model
+          </div>
+        </div>
+        <div>
+          <UploadButton
+            id="clothesFile"
+            setForPost={setClothes}
+            disabled={disabled}
+          />
+          <span className="areaName">OR</span>
+          <Help id="clothes" text={helpText.clothes} />
 
-        {/* 모델 */}
-        <span className="areaName">Model</span>
-        <UploadButton
-          id="modelFile"
-          setForPost={setModel}
-          disabled={disabled}
-        />
-        <span className="areaName">OR</span>
-        <Help id="model" />
-        <SampleModels />
+          <UploadButton
+            id="modelFile"
+            setForPost={setModel}
+            disabled={disabled}
+          />
+          <span className="areaName">OR</span>
+          <Help id="model" text={helpText.model} />
+        </div>
+
+        <SelectedImg clothes={clothes} model={model} />
 
         {/* submit 버튼이 보이다가, 클릭하면 Loading 버튼으로 전환 */}
         {disabled ? (
@@ -138,8 +161,8 @@ function LeftScreen({ uid, setPlyFile }) {
         ) : (
           <SubmitButton style={submitStyle} />
         )}
+        <CheckServer uid={uid} />
       </form>
-      <CheckServer uid={uid} />
     </div>
   );
 }

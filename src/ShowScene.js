@@ -6,6 +6,7 @@ import { PLYLoader } from "three/examples/jsm/loaders/PLYLoader";
 import equal from "fast-deep-equal";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { runInThisContext } from "vm";
+import { VRButton } from "three/examples/jsm/webxr/VRButton.js";
 
 // 추가 - 현재 상황
 // import Stats from "three/examples/jsm/libs/stats.module";
@@ -83,13 +84,16 @@ class ShowScene extends Component {
     loader.load(this.props.plyFile, function (geometry) {
       // geometry.computeVertexNormals();
 
-      let material = new THREE.PointCloudMaterial({
+      // three.module.js:47874 THREE.PointCloudMaterial has been renamed to THREE.PointsMaterial.
+      let material = new THREE.PointsMaterial({
         size: 0.03,
         // color: 0x0055ff,
         // flatShading: true,
       });
       material.vertexColors = true;
-      let mesh = THREE.PointCloud(geometry, material);
+
+      // THREE.PointCloud has been renamed to THREE.Points.
+      let mesh = new THREE.Points(geometry, material);
       // let mesh = new THREE.Mesh(geometry, material);
 
       mesh.position.y = 0.3;
@@ -141,6 +145,7 @@ class ShowScene extends Component {
     controls.enableDamping = true;
 
     renderer.shadowMap.enabled = true;
+    renderer.xr.enabled = true;
 
     this.scene = scene;
     this.camera = camera;
@@ -149,9 +154,9 @@ class ShowScene extends Component {
 
     // 테스트 대상임 이걸로 width 100%, height 100% 만들어야함
     console.log(renderer.domElement);
-    console.dir(renderer.domElement);
 
     this.mount.appendChild(this.renderer.domElement);
+    this.mount.appendChild(VRButton.createButton(renderer));
     this.start();
   }
 
@@ -190,7 +195,7 @@ class ShowScene extends Component {
         className="ply"
         // 기본 style
         // style={{ width: '500px', height: '500px' }}
-        style={{ width: "100%", height: "760px" }}
+        style={{ width: "100%", height: "700px" }}
         ref={(mount) => {
           this.mount = mount;
         }}

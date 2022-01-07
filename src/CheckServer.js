@@ -16,7 +16,7 @@ function CheckServer({ uid }) {
 
   const checkServer = () => {
     axios
-      .post("http://localhost:5000/wtf/user_directory", {
+      .post("http://192.168.154.29:5000/wtf/user_directory", {
         uid: uid,
       })
       .then((res) => {

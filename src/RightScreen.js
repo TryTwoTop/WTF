@@ -6,7 +6,6 @@ function RightScreen({ plyFile }) {
   return (
     <div id="rightScreen">
       <ShowScene plyFile={plyFile} />
-      <h5>Virtual Try-ON</h5>
     </div>
   );
 }

@@ -22,13 +22,15 @@ const uploadStyle = {
 };
 
 export default function UploadButton({ id, setForPost, disabled }) {
-  const [encodedFile, setEncodedFile] = useState("");
   const [fileName, setFileName] = useState("Upload");
 
   const onChange = (e) => {
-    const file = e.target.files[0];
-    setFileName(file.name);
-    getBase64(file);
+    // 사진을 업로드하고, 다시 사진을 취소하면 생기는 오류 해결 코드
+    if (Object.keys(e.target.files).length !== 0) {
+      const file = e.target.files[0];
+      setFileName(file.name);
+      getBase64(file);
+    }
   };
 
   // const onLoad = (fileString) => {
@@ -39,34 +41,29 @@ export default function UploadButton({ id, setForPost, disabled }) {
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-      setEncodedFile(reader.result);
+      // setEncodedFile(reader.result);
       setForPost(reader.result.substring(22));
       // onLoad(reader.result);
     };
   };
 
   return (
-    <>
-      <label htmlFor={id}>
-        <Input
-          disabled={disabled}
-          accept="image/*"
-          id={id}
-          type="file"
-          onChange={onChange}
-        />
-        <Button
-          disabled={disabled}
-          style={uploadStyle}
-          variant="contained"
-          component="span"
-        >
-          {fileName}
-        </Button>
-      </label>
-      {encodedFile !== "" ? (
-        <img src={encodedFile} alt="사진" height="480px" />
-      ) : null}
-    </>
+    <label htmlFor={id}>
+      <Input
+        disabled={disabled}
+        accept="image/*"
+        id={id}
+        type="file"
+        onChange={onChange}
+      />
+      <Button
+        disabled={disabled}
+        style={uploadStyle}
+        variant="contained"
+        component="span"
+      >
+        {fileName}
+      </Button>
+    </label>
   );
 }
