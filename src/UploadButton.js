@@ -26,11 +26,12 @@ export default function UploadButton({ id, setForPost, disabled }) {
 
   const onChange = (e) => {
     // 사진을 업로드하고, 다시 사진을 취소하면 생기는 오류 해결 코드
-    if (Object.keys(e.target.files).length !== 0) {
-      const file = e.target.files[0];
-      setFileName(file.name);
-      getBase64(file);
+    if (Object.keys(e.target.files).length === 0) {
+      return;
     }
+    const file = e.target.files[0];
+    setFileName(file.name);
+    getBase64(file);
   };
 
   // const onLoad = (fileString) => {
@@ -42,7 +43,7 @@ export default function UploadButton({ id, setForPost, disabled }) {
     reader.readAsDataURL(file);
     reader.onload = () => {
       // setEncodedFile(reader.result);
-      setForPost(reader.result.substring(22));
+      setForPost(reader.result);
       // onLoad(reader.result);
     };
   };

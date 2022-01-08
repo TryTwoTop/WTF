@@ -23,7 +23,7 @@ const strStyle = {
 };
 
 function SelectedImg({ clothes, model }) {
-  const str = "data:image/png;base64,";
+  // const str = "data:image/png;base64,";/
 
   return (
     <div style={boxStyle}>
@@ -34,7 +34,7 @@ function SelectedImg({ clothes, model }) {
         {clothes === "" ? null : (
           <img
             style={{ border: "2px solid black" }}
-            src={str.concat(clothes)}
+            src={clothes}
             alt="사진"
             width="80%"
           />
@@ -51,7 +51,7 @@ function SelectedImg({ clothes, model }) {
               border: "2px solid black",
               textAlign: "center",
             }}
-            src={str.concat(model)}
+            src={model}
             alt="사진"
             width="80%"
           />

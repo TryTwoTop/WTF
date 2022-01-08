@@ -12,6 +12,7 @@ import SendIcon from "@mui/icons-material/Send";
 import SelectedImg from "./SelectedImg";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import WebCamButton from "./WebCamButton";
 
 // Help 컴포넌트 id 구현하기
 
@@ -84,14 +85,17 @@ function LeftScreen({ uid, setPlyFile }) {
 
     setDisabled(true);
 
+    const clothesBase64 = clothes.substring(22);
+    const modelBase64 = model.substring(22);
+
     // https://any-ting.tistory.com/16
     // https://github.com/axios/axios
     // http://daplus.net/http-get-post-요청을-수락하는-http-테스트-서버/
     axios
       .post("http://192.168.154.29:5000/wtf/3dtryon", {
         uid: uid,
-        uploaded_cloth: clothes,
-        uploaded_model: model,
+        uploaded_cloth: clothesBase64,
+        uploaded_model: modelBase64,
       })
       .then((res) => {
         const data = res.data;
@@ -161,6 +165,7 @@ function LeftScreen({ uid, setPlyFile }) {
         ) : (
           <SubmitButton style={submitStyle} />
         )}
+        <WebCamButton setModel={setModel} />
         <CheckServer uid={uid} />
       </form>
     </div>
