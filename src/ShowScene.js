@@ -2,14 +2,12 @@ import { Component } from "react";
 import * as THREE from "three";
 import { PLYLoader } from "three/examples/jsm/loaders/PLYLoader";
 
-// 추가 - 마우스 콘트롤
 import equal from "fast-deep-equal";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { runInThisContext } from "vm";
 import { VRButton } from "three/examples/jsm/webxr/VRButton.js";
 
-// 추가 - 현재 상황
-// import Stats from "three/examples/jsm/libs/stats.module";
+import backgroundImg from "./images/semyung/jisjpyta-900.jpg";
 
 function addShadowedLight(x, y, z, color, intensity, scene) {
   const directionalLight = new THREE.DirectionalLight(color, intensity);
@@ -65,7 +63,7 @@ class ShowScene extends Component {
 
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(35, width / height, 1, 15);
-    
+
     // camera = new THREE.PerspectiveCamera(
     //   75,
     //   window.innerWidth / window.innerHeight,
@@ -79,35 +77,31 @@ class ShowScene extends Component {
     camera.position.set(0, 0.6, 3);
 
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x72645b);
-    scene.fog = new THREE.Fog(0x72645b, 2, 15);
+
+    // 3D Model 나오는 부분 배경 설정
+    const imgLoader = new THREE.TextureLoader();
+    scene.background = imgLoader.load(backgroundImg);
+
+    // scene.background = new THREE.Color(0x72645b);
+    // scene.fog = new THREE.Fog(0x72645b, 2, 15);
 
     const loader = new PLYLoader();
 
     loader.load(this.props.plyFile, function (geometry) {
       // geometry.computeVertexNormals();
 
-      // three.module.js:47874 THREE.PointCloudMaterial has been renamed to THREE.PointsMaterial.
+      // THREE.PointCloudMaterial has been renamed to THREE.PointsMaterial.
       let material = new THREE.PointsMaterial({
         size: 0.03,
-        // color: 0x0055ff,
         // flatShading: true,
       });
       material.vertexColors = true;
 
       // THREE.PointCloud has been renamed to THREE.Points.
       let mesh = new THREE.Points(geometry, material);
-      // let mesh = new THREE.Mesh(geometry, material);
 
       mesh.position.y = 0.3;
       mesh.position.z = 0.3;
-      // mesh.rotation.x = -Math.PI / 2;
-
-      // // 천사 세우기
-      // mesh.rotation.x = 0;
-      // mesh.position.y = 0.3;
-
-      // mesh.scale.multiplyScalar(0.001);
 
       mesh.castShadow = true;
       mesh.receiveShadow = true;
@@ -115,54 +109,46 @@ class ShowScene extends Component {
       scene.add(mesh);
     });
 
-    let plane = new THREE.Mesh(
-      new THREE.PlaneBufferGeometry(40, 40),
-      new THREE.MeshPhongMaterial({ color: 0x999999, specular: 0x100000 })
-    );
-    plane.rotation.x = -Math.PI / 2;
-    plane.position.y = -0.5;
+    // let plane = new THREE.Mesh(
+    //   new THREE.PlaneBufferGeometry(40, 40),
+    //   new THREE.MeshPhongMaterial({ color: 0x999999, specular: 0x100000 })
+    // );
+    // plane.rotation.x = -Math.PI / 2;
+    // plane.position.y = -0.5;
 
-    scene.add(plane);
+    // scene.add(plane);
 
-    plane.receiveShadow = true;
+    // plane.receiveShadow = true;
 
     scene.add(new THREE.HemisphereLight(0x443333, 0x111122));
 
     scene = addShadowedLight(1, 1, 1, 0xffffff, 1.35, scene);
     scene = addShadowedLight(0.5, 1, -1, 0xffaa00, 1, scene);
 
-    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(window.devicePixelRatio);
-    // renderer.setSize( window.innerWidth, window.innerHeight );
-
-    // 사이즈를 작게 함
     renderer.setSize(1200, 760);
-
-    // 테스트 : 아  몰라 ~~~!
-    // renderer.setSize(window.innerWidth / 100 * 70 - 34, window.innerHeight);
 
     renderer.outputEncoding = THREE.sRGBEncoding;
 
-    // 추가 - 마우스 콘트롤
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
 
     renderer.shadowMap.enabled = true;
 
-    console.log(renderer);
     renderer.xr.enabled = true;
-    
+
     //codes from https://coderedirect.com/questions/307652/unable-to-change-camera-position-when-using-vrcontrols
-    
+
     const cameraGroup = new THREE.Group();
     cameraGroup.position.set(0, -1, 1.5);
 
-    renderer.xr.addEventListener('sessionstart', function () {
+    renderer.xr.addEventListener("sessionstart", function () {
       scene.add(cameraGroup);
       cameraGroup.add(camera);
     });
 
-    renderer.xr.addEventListener('sessionend', function () {
+    renderer.xr.addEventListener("sessionend", function () {
       scene.remove(cameraGroup);
       cameraGroup.remove(camera);
     });
@@ -172,8 +158,6 @@ class ShowScene extends Component {
     this.cameraTarget = cameraTarget;
     this.renderer = renderer;
 
-    // 테스트 대상임 이걸로 width 100%, height 100% 만들어야함
-    //console.log(renderer.domElement);
     this.mount.appendChild(this.renderer.domElement);
     this.mount.appendChild(VRButton.createButton(this.renderer));
   }
@@ -184,10 +168,12 @@ class ShowScene extends Component {
   }
 
   animate() {
-    this.renderer.setAnimationLoop(this.renderScene = () => {
-      this.camera.lookAt(this.cameraTarget);
-      this.renderer.render(this.scene, this.camera);
-    });
+    this.renderer.setAnimationLoop(
+      (this.renderScene = () => {
+        this.camera.lookAt(this.cameraTarget);
+        this.renderer.render(this.scene, this.camera);
+      })
+    );
   }
 
   render() {
