@@ -33,6 +33,17 @@ const helpText = {
   model: "머리부터 발끝까지 보이는 본인의 신체 사진을 업로드 해주세요",
 };
 
+const delPrefix = (string) => {
+  const pngPrefix = "data:image/png;base64,";
+  const jpgPrefix = "data:image/jpeg;base64,";
+
+  if (string.startsWith(pngPrefix)) {
+    return string.substring(pngPrefix.length);
+  } else if (string.startsWith(jpgPrefix)) {
+    return string.substring(jpgPrefix.length);
+  }
+};
+
 function LeftScreen({ uid, setPlyFile }) {
   const [clothes, setClothes] = useState("");
   const [model, setModel] = useState("");
@@ -85,9 +96,10 @@ function LeftScreen({ uid, setPlyFile }) {
 
     setDisabled(true);
 
-    const clothesBase64 = clothes.substring(22);
-    const modelBase64 = model.substring(22);
+    const clothesBase64 = delPrefix(clothes);
+    const modelBase64 = delPrefix(model);
 
+    console.log(modelBase64);
     // https://any-ting.tistory.com/16
     // https://github.com/axios/axios
     // http://daplus.net/http-get-post-요청을-수락하는-http-테스트-서버/
