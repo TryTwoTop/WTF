@@ -7,7 +7,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { runInThisContext } from "vm";
 import { VRButton } from "three/examples/jsm/webxr/VRButton.js";
 
-import backgroundImg from "./images/semyung/jisjpyta-900.jpg";
+import backgroundImg from "./images/semyung/four.png";
 
 function addShadowedLight(x, y, z, color, intensity, scene) {
   const directionalLight = new THREE.DirectionalLight(color, intensity);
